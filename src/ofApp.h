@@ -1,6 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxCv.h"
+
+// #define _USE_LIVE_VIDEO
+// uncomment this to use a live camera
 
 class ofApp : public ofBaseApp{
 
@@ -20,5 +24,18 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+    
+    ofPixels previous;
+    ofImage diff;
+    
+    cv::Scalar diffMean;
+    // a scalar is like an ofVec4f but normally used for storing color information
+    
+    #ifdef _USE_LIVE_VIDEO
+          ofVideoGrabber cam;
+    #else
+          ofVideoPlayer cam;
+    #endif
 		
 };
