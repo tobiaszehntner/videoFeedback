@@ -6,6 +6,24 @@
 // #define _USE_LIVE_VIDEO
 // uncomment this to use a live camera
 
+// from example-contours-following
+class Glow : public ofxCv::RectFollower {
+    protected:
+        ofColor color;
+        ofVec2f cur, smooth;
+        float startedDying;
+        ofPolyline all;
+    public:
+        Glow()
+        :startedDying(0) {
+        }
+        void setup(const cv::Rect& track);
+        void update(const cv::Rect& track);
+        void kill();
+        void draw();
+};
+
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -37,5 +55,9 @@ class ofApp : public ofBaseApp{
     #else
           ofVideoPlayer cam;
     #endif
+    
+    ofxCv::ContourFinder contourFinder;
+    ofxCv::ObjectFinder objectFinder;
+    ofxCv::RectTrackerFollower<Glow> tracker;
 		
 };
