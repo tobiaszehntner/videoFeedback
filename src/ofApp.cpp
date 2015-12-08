@@ -65,21 +65,37 @@ void ofApp::setup() {
     imitate(previous, cam);
     imitate(diff, cam);
     
-    contourFinder.setMinAreaRadius(1);
-    contourFinder.setMaxAreaRadius(100);
-    contourFinder.setThreshold(15);
-    
+    // ContourFinder
+    contourFinder.setThreshold(100);
     contourFinder.setMinArea(50);
     contourFinder.setMaxArea(100);
     
-    
-    
-    
+    // Tracker
     // wait for half a frame before forgetting something
     tracker.setPersistence(120);
     // an object can move up to 50 pixels per frame
     tracker.setMaximumDistance(60);
     
+    // GUI
+    gui.setup(); // most of the time you don't need a name
+    gui.add(threshold.setup("threshold", 100, 0, 255));
+//    gui.add(filled.setup("fill", true));
+//    gui.add(radius.setup("radius", 140, 10, 300));
+//    gui.add(center.setup("center", ofVec2f(ofGetWidth()*.5, ofGetHeight()*.5), ofVec2f(0, 0), ofVec2f(ofGetWidth(), ofGetHeight())));
+//    gui.add(color.setup("color", ofColor(100, 100, 140), ofColor(0, 0), ofColor(255, 255)));
+//    gui.add(twoCircles.setup("two circles"));
+//    gui.add(ringButton.setup("ring"));
+//    gui.add(screenSize.setup("screen size", ofToString(ofGetWidth())+"x"+ofToString(ofGetHeight())));
+    
+    isGuiHidden = false;
+    
+    threshold.addListener(this, &ofApp::thresholdChanged);
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::thresholdChanged(int &threshold){
+    contourFinder.setThreshold(threshold);
 }
 
 //--------------------------------------------------------------
@@ -100,14 +116,20 @@ void ofApp::update() {
         blur(cam, 10);
         contourFinder.findContours(diff);
         tracker.track(contourFinder.getBoundingRects());
+        
+        
     }
+    
+    contourFinder.setThreshold(threshold);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+    
     ofSetColor(255);
     cam.draw(0, 0);
     
+    ofPushMatrix();
     ofTranslate(320, 0);
     
     diff.draw(0, 0);
@@ -116,11 +138,21 @@ void ofApp::draw() {
     for(int i = 0; i < followers.size(); i++) {
         followers[i].draw();
     }
+    ofPopMatrix();
     
+    if(!isGuiHidden){
+        gui.draw();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    
+    switch (key) {
+        case 'h':
+            isGuiHidden = !isGuiHidden;
+            break;
+    }
 
 }
 

@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+#include "ofxGui.h"
 
 // #define _USE_LIVE_VIDEO
 // uncomment this to use a live camera
@@ -59,5 +60,21 @@ class ofApp : public ofBaseApp{
     ofxCv::ContourFinder contourFinder;
     ofxCv::ObjectFinder objectFinder;
     ofxCv::RectTrackerFollower<Glow> tracker;
+    
+    // GUI
+    bool isGuiHidden;
+    ofxIntSlider threshold;
+    
+//    ofxFloatSlider radius;
+//    ofxColorSlider color;
+//    ofxVec2Slider center;
+//    ofxToggle filled;
+//    ofxButton twoCircles;
+//    ofxButton ringButton;
+//    ofxLabel screenSize;
+    
+    ofxPanel gui;
+    
+    void thresholdChanged(int & threshold);
 		
 };
